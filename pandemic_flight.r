@@ -2,7 +2,7 @@ library(shiny)
 library(shinydashboard)
 library(mapdeck)
 library(dplyr)
-
+require(tidyverse)
 
 # UI
 header <- dashboardHeader(title='Pandemic Flight')
@@ -25,22 +25,21 @@ body <- dashboardBody(
                 column(width=3,
                         selectInput(inputId='origin',
                                      label='Select Original State',
-                                     list('All',
-                                          'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT',
-                                          'DC', 'DE', 'FL', 'GA', 'HI', 'IA', 'ID', 
-                                          'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD',
-                                          'ME', 'MI', 'MN', 'MO', 'MS', 'MT', 'NC',
-                                          'ND', 'NE', 'NH', 'NJ', 'NM', 'NV', 'NY',
-                                          'OH', 'OK', 'OR', 'PA', 'PR', 'RI', 'SC',
-                                          'SD', 'TN', 'TX', 'UT', 'VA', 'VT', 'WA',
-                                          'WI', 'WV', 'WY'))),
+                                     list('AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT',
+                                          'FL', 'GA', 'HI', 'IA', 'ID', 'IL', 'IN', 
+                                          'KS', 'KY', 'LA', 'MA', 'MD', 'ME', 'MI',
+                                          'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE',
+                                          'NH', 'NJ', 'NM', 'NV', 'NY', 'OH', 'OK',
+                                          'OR', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN',
+                                          'TX', 'UT', 'VA', 'VT', 'WA', 'WI', 'WV',
+                                          'WY'))),
                 column(width=3,  
                        actionButton('search_map', 'Apply filter'),
                        style = 'margin-top: 25px;')
             ),
             box(width = 12,
                 mapdeckOutput(outputId = 'map',
-                              height = '800px')
+                              height = '530px')
                 )
     ),
     
@@ -67,10 +66,6 @@ server <- function(input, output) {
   mapkey = "pk.eyJ1IjoicmFqZXNoMTIza3VuYWwiLCJhIjoiY2wxeDR2cTBsMDBjeTNpbnpxcHViNHRpaiJ9.JSxaLmgNMV6FZT25dXTsqg"
   set_token(mapkey) 
   
-  # load data
-  flights_2020 = read.csv('flight_details_2020.csv', header=TRUE, sep=',')
-  flights_2021 = read.csv('flight_details_2021.csv', header=TRUE, sep=',')
-  
   # initialize a map
   output$map <- renderMapdeck({
     mapdeck(style = mapdeck_style('dark'), 
@@ -78,19 +73,20 @@ server <- function(input, output) {
             zoom = 4, 
             pitch = 45)})
   
+  # load data
+  # flights_2020 = read.csv('flight_details_2020.csv', header=TRUE, sep=',')
+  # flights_2021 = read.csv('flight_details_2021.csv', header=TRUE, sep=',')
+  
   # map event
-  data = ''
   observeEvent(input$search_map, {
     # get the input data
     if(input$year == '2020') {
-      data = flights_2020
+      data = read.csv('flight_details_2020.csv', header=TRUE, sep=',')
     } else {
-      data = flights_2021
+      data = read.csv('flight_details_2021.csv', header=TRUE, sep=',')
     }
     
-    if(input$origin != 'All') {
-      data = filter(data, ORIGIN_STATE_ABR == input$origin)
-    }
+    data = filter(data, ORIGIN_STATE_ABR == input$origin)
     
     # initialize a map
     output$map <- renderMapdeck({
@@ -105,10 +101,7 @@ server <- function(input, output) {
                 stroke_to = 'DEST_STATE_ABR',
                 update_view = FALSE)
     })
-    
   })
-  
-  
 }
 
 shinyApp(ui, server)
