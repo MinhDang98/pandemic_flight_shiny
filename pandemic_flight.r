@@ -18,7 +18,6 @@ sidebar <- dashboardSidebar(
               menuItem('Explorations', tabName = 'explorations', icon = icon('search')),
               menuItem('Methods', tabName = 'methods', icon = icon('poll')),
               menuItem('Results', tabName = 'results', icon = icon('lightbulb')),
-              menuItem('Comparisons', tabName = 'comparisons', icon = icon('compress')),
               menuItem('Conclusions', tabName = 'conclusions', icon = icon('terminal'))))
 
 body <- dashboardBody(
@@ -28,12 +27,18 @@ body <- dashboardBody(
             style='overflow-y:scroll; height:90vh;',
             box(width=12, 
                 h1('Summary', style=h1_style),
-                p('- In 2020, there are 142 airports and there are 224 distinct 
-                flights from these airports consider as important.',
+                p('- Our main goal is to find a solution to decrease the number 
+                  of flights to a minimum per state utilising only those airports 
+                  with most recurring and frequent flights so that travelers can 
+                  reach their desired destinations, while lowering the spread of Covid-19.',
                   style=style),
-                p('- In 2021, there are 143 airports and there are 214 distinct 
-                flights from these airports consider as important.',
-                  style=style)
+                p('- After exploring our data, we found out that:', style=style),
+                tags$ol(
+                  tags$li('In 2020, there are 142 airports and there are 224 distinct 
+                          flights from these airports consider as important.', style=style), 
+                  tags$li('In 2021, there are 143 airports and there are 214 distinct 
+                          flights from these airports consider as important.', style=style)
+                )
             ),
             box(width=12,
                 h1('Visualization', style=h1_style),
@@ -122,14 +127,35 @@ body <- dashboardBody(
             
     ),
     
-    # comparisons tab
-    tabItem(tabName = 'comparisons',
-            h2('comparisons')
-    ),
-    
     # conclusions tab
     tabItem(tabName = 'conclusions',
-            h2('conclusions'))
+            box(width=12, 
+                h1('Important Points', style=h1_style),
+                p('- SVM performs poorly in unbalance dataset.', style=style),
+                p('- We drop the other qualitative features because they
+                are not meaningful. (Airport ID, Year, etc.)', style=style),
+                p('- We drop the other qualitative features because they
+                are not meaningful. (Airport ID, Year, etc.)', style=style)),
+            
+            box(width=12, 
+                h1('Limitations', style=h1_style),
+                p('- The imbalance nature of the data can greatly affect the model
+                  performance.', style=style),
+                p('- Missing the cost of the flights, which can be used to verify
+                  the actual profit of the predicted flights.', style=style),
+                p('- We drop the other qualitative features because they
+                are not meaningful. (Airport ID, Year, etc.)', style=style)),
+            
+            box(width=12, 
+                h1('Again', style=h1_style),
+                p('- The imbalance nature of the data can greatly affect the model
+                  performance.', style=style),
+                p('- Missing the cost of the flights, which can be used to verify
+                  the actual profit of the predicted flights.', style=style),
+                p('- We drop the other qualitative features because they
+                are not meaningful. (Airport ID, Year, etc.)', style=style)),
+                
+    )
   )
 )
 
@@ -186,7 +212,6 @@ server <- function(input, output, session) {
     imgs = 'www/ROC.png'
     cm_imgs = list.files("www/cm/", pattern=".png", full.names = TRUE)
     imgs <- append(imgs, cm_imgs)
-    print(imgs)
     slickR(imgs)
   })
 }

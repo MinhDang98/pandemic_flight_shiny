@@ -5,10 +5,10 @@ account: pandemicflight
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 6095464
-bundleId: 5862974
+bundleId: 5875124
 url: https://pandemicflight.shinyapps.io/pandemic_flight_shiny/
-when: 1651549731.80574
-lastSyncTime: 1651549731.80574
+when: 1651788700.27863
+lastSyncTime: 1651788700.27863
 asMultiple: FALSE
 asStatic: FALSE
 ignoredFiles: LICENSE|www - Copy
